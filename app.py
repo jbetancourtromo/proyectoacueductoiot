@@ -5,73 +5,110 @@ import plotly.express as px
 
 # --- Configuración de ThingSpeak ---
 CHANNEL_ID = '3071480'
-READ_API_KEY = 'TU_READ_API_KEY' # Opcional si el canal es público
-URL_THINGSPEAK = f'httpsapi.thingspeak.comchannels{CHANNEL_ID}feeds.json'
-# Si tu canal es privado, usa
-# URL_THINGSPEAK = f'httpsapi.thingspeak.comchannels{CHANNEL_ID}feeds.jsonapi_key={READ_API_KEY}'
+# Si tu canal es privado, añade tu Read API Key aquí:
+# READ_API_KEY = 'IHA53391H4BEBFJ7'
+URL_THINGSPEAK = f'https://api.thingspeak.com/channels/{CHANNEL_ID}/feeds.json'
+# Si el canal es privado, la URL debe incluir la clave:
+# URL_THINGSPEAK = f'https://api.thingspeak.com/channels/{CHANNEL_ID}/feeds.json?api_key={READ_API_KEY}'
 
 # --- Función para obtener los últimos datos ---
-@st.cache_data(ttl=60) # Cacha los datos por 60 segundos para evitar llamadas repetitivas
-def fetch_thingspeak_data()
-    try
+@st.cache_data(ttl=60) # Cacha los datos por 60 segundos
+def fetch_thingspeak_data():
+    """
+    Obtiene los datos más recientes del canal de ThingSpeak y los organiza.
+    """
+    try:
         response = requests.get(URL_THINGSPEAK)
+        response.raise_for_status()  # Lanza una excepción para errores HTTP
         data = response.json()
         
         # Mapea los datos de los campos a nombres de sensores
         last_entry = data['feeds'][-1]
         sensor_data = {
-            Caudal last_entry['field1'],
-            Cloro last_entry['field2'],
-            Nivel last_entry['field3'],
-            Altura last_entry['field4'],
-            Presion last_entry['field5'],
-            Temperatura last_entry['field6'],
-            Humedad last_entry['field7'],
-            Alarmas last_entry['field8'],
+            "Caudal": last_entry['field1'],
+            "Cloro": last_entry['field2'],
+            "Nivel": last_entry['field3'],
+            "Altura": last_entry['field4'],
+            "Presion": last_entry['field5'],
+            "Temperatura": last_entry['field6'],
+            "Humedad": last_entry['field7'],
+            "Alarmas": last_entry['field8'],
         }
         return sensor_data, data['feeds']
 
-    except Exception as e
-        st.error(fError al obtener datos de ThingSpeak {e})
+    except requests.exceptions.RequestException as e:
+        st.error(f"Error de red al conectar con ThingSpeak: {e}")
         return None, None
-        
+    except (KeyError, IndexError) as e:
+        st.error(f"Error al procesar los datos recibidos. Asegúrate de que el canal tiene datos: {e}")
+        return None, None
+    except Exception as e:
+        st.error(f"Ocurrió un error inesperado: {e}")
+        return None, None
+
+# --- Diseño de la página ---
+st.set_page_config(
+    page_title="Monitoreo Acueducto Ovejas-Tangua",
+    page_icon="💧",
+    layout="wide"
+)
+
+# --- Título principal y descripción ---
+st.title("💧 Sistema de Monitoreo del Acueducto")
+st.markdown("Dashboard interactivo para visualizar los datos en tiempo real y el histórico del proyecto de monitoreo del acueducto Ovejas-Tangua.")
+
 # --- Llama a la función y obtiene los datos ---
 sensor_data, historical_data = fetch_thingspeak_data()
 
-# --- Diseño de la página ---
-st.set_page_config(layout="wide")
-st.title("💧 Monitoreo del Acueducto Ovejas-Tangua")
 st.markdown("---")
 
-# --- Sección 1: Datos en Tiempo Real (KPIs) ---
-st.header("📈 Valores Actuales de Sensores")
+## **📈 Datos en Tiempo Real**
+
 if sensor_data:
-    col1, col2, col3, col4, col5 = st.columns(5)
-    with col1:
-        st.metric("Caudal (L/min)", f"{float(sensor_data['Caudal']):.2f}")
-    with col2:
-        st.metric("Cloro (ppm)", f"{float(sensor_data['Cloro']):.2f}")
-    with col3:
-        st.metric("Nivel (%)", f"{float(sensor_data['Nivel']):.2f}")
-    with col4:
-        st.metric("Altura (m)", f"{float(sensor_data['Altura']):.2f}")
-    with col5:
-        st.metric("Presión (bar)", f"{float(sensor_data['Presion']):.2f}")
+    st.write("Valores de los sensores en la última lectura:")
     
-    # Muestra las alarmas
+    # Crea un contenedor para las métricas
+    with st.container():
+        col1, col2, col3, col4, col5 = st.columns(5)
+        
+        with col1:
+            st.metric("Caudal (L/min)", f"{float(sensor_data['Caudal']):.2f}")
+        with col2:
+            st.metric("Cloro (ppm)", f"{float(sensor_data['Cloro']):.2f}")
+        with col3:
+            st.metric("Nivel (%)", f"{float(sensor_data['Nivel']):.2f}")
+        with col4:
+            st.metric("Presión (bar)", f"{float(sensor_data['Presion']):.2f}")
+        with col5:
+            st.metric("Temperatura (°C)", f"{float(sensor_data['Temperatura']):.2f}")
+    
+    # Sección para las alarmas
     st.subheader("Estado de Alarmas")
-    alarm_value = int(sensor_data['Alarmas'])
-    # Puedes usar una lógica para decodificar la máscara de bits
+    alarm_value = int(float(sensor_data['Alarmas']))
+    
     if alarm_value > 0:
-        st.error("🚨 ¡ATENCIÓN! Alarma activada.")
+        st.error("🚨 ¡ATENCIÓN! Alarma activada. Posibles problemas detectados.")
+        # Opcional: decodifica los bits de la máscara de alarma para mostrar qué alarmas están activas
+        alarm_messages = []
+        if (alarm_value & 1) > 0: alarm_messages.append("Alarma de Caudal")
+        if (alarm_value & 2) > 0: alarm_messages.append("Alarma de Cloro")
+        if (alarm_value & 4) > 0: alarm_messages.append("Alarma de Nivel")
+        if (alarm_value & 8) > 0: alarm_messages.append("Alarma de Altura")
+        if (alarm_value & 16) > 0: alarm_messages.append("Alarma de Presión")
+        st.warning("Alarmas activas: " + ", ".join(alarm_messages))
     else:
-        st.success("✅ Sistema en estado normal.")
+        st.success("✅ Sistema en estado normal. No se han detectado alarmas.")
+else:
+    st.warning("No se pudieron cargar los datos de los sensores. Por favor, verifica la conexión.")
+
 st.markdown("---")
 
-# --- Sección 2: Análisis Histórico (Gráficos) ---
-st.header("📊 Análisis Histórico de Datos")
+## **📊 Histórico de Datos y Tendencias**
+
 if historical_data:
     df = pd.DataFrame(historical_data)
+    
+    # Renombra y limpia el DataFrame
     df.rename(columns={
         'created_at': 'Fecha y Hora',
         'field1': 'Caudal', 'field2': 'Cloro', 'field3': 'Nivel',
@@ -79,15 +116,36 @@ if historical_data:
         'field7': 'Humedad', 'field8': 'Alarmas'
     }, inplace=True)
     df['Fecha y Hora'] = pd.to_datetime(df['Fecha y Hora'])
+    
+    # Convierte las columnas a valores numéricos, gestionando posibles errores
+    for col in ['Caudal', 'Cloro', 'Nivel', 'Altura', 'Presion', 'Temperatura', 'Humedad', 'Alarmas']:
+        df[col] = pd.to_numeric(df[col], errors='coerce')
+        
+    df.dropna(inplace=True)
 
-    # Creación del gráfico interactivo con Plotly
-    fig = px.line(df, x='Fecha y Hora', y=['Caudal', 'Nivel', 'Presion'],
-                  title='Evolución de Parámetros del Acueducto',
-                  labels={'value': 'Valor', 'variable': 'Parámetro'})
-    st.plotly_chart(fig, use_container_width=True)
+    # Selector de datos
+    sensor_options = ['Caudal', 'Cloro', 'Nivel', 'Altura', 'Presion', 'Temperatura', 'Humedad']
+    selected_sensors = st.multiselect("Selecciona los sensores para el gráfico:", sensor_options, default=['Caudal', 'Nivel'])
+
+    if selected_sensors:
+        fig = px.line(df, x='Fecha y Hora', y=selected_sensors,
+                      title='Evolución de Parámetros del Acueducto',
+                      labels={'value': 'Valor', 'variable': 'Parámetro'},
+                      markers=True)
+        fig.update_layout(hovermode="x unified")
+        st.plotly_chart(fig, use_container_width=True)
+    else:
+        st.info("Por favor, selecciona al menos un sensor para visualizar los datos históricos.")
+else:
+    st.info("No hay datos históricos disponibles para mostrar en el gráfico.")
+
 st.markdown("---")
 
-# --- Sección 3: Galería del Proyecto ---
-st.header("📸 Galería del Proyecto")
-st.image("https://raw.githubusercontent.com/jbetancourtromo/proyectoacueductoiot/main/assets/acueducto.png")
-st.caption("Diagrama del sistema de monitoreo en Wokwi.")
+## **📸 Galería del Proyecto**
+st.subheader("Proyecto Acueducto -Talento Tech")
+st.write("Diagrama de los componentes del sistema y su conexión.")
+# Cambia esta URL a la ruta de tu imagen en tu repositorio de GitHub
+st.image("https://raw.githubusercontent.com/jbetancourtromo/proyectoacueductoiot/main/assets/acueducto.png",
+         caption="Diagrama de flujo del sistema de monitoreo IoT", use_column_width=True)
+
+st.write("Recuerda reemplazar 'TU_USUARIO' y 'TU_REPO' con tus datos de GitHub.")

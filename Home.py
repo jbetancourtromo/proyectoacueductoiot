@@ -45,7 +45,7 @@ st.markdown("---")
 
 # --- Imagen del Acueducto ---
 # Se cambió use_column_width por use_container_width
-st.image("https://raw.githubusercontent.com/TU_USUARIO/TU_REPO/main/assets/imagen_acueducto.jpg",
+st.image("https://raw.githubusercontent.com/jbetancourtromo/proyectoacueductoiot/main/assets/acueducto.png",
          caption="Proyecto Talento Tech: Acueducto Samaniego - James Betancourt R ", use_container_width=True)
 
 
@@ -69,3 +69,4 @@ if sensor_data:
 
 else:
     st.warning("No se pudieron cargar los datos de los sensores. Por favor, verifica la conexión y que el canal de ThingSpeak tenga datos.")
+

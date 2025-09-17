@@ -1,9 +1,9 @@
+
 import streamlit as st
 import requests
 import pandas as pd
 
 # --- Configuración de ThingSpeak ---
-# **ESTAS VARIABLES DEBEN ESTAR AL INICIO DEL SCRIPT**
 CHANNEL_ID = '3071480'
 READ_API_KEY = 'IHA53391H4BEBFJ7'  # ¡Pega aquí tu Read API Key!
 URL_THINGSPEAK_FEEDS = f'https://api.thingspeak.com/channels/{CHANNEL_ID}/feeds.json?api_key={READ_API_KEY}'
@@ -44,9 +44,10 @@ st.markdown("Dashboard interactivo para visualizar los datos en tiempo real y el
 st.markdown("---")
 
 # --- Imagen del Acueducto ---
-# Reemplaza la URL de la imagen con la que tengas en tu repositorio de GitHub
-st.image("https://raw.githubusercontent.com/jbetancourtromo/proyectoacueductoiot/main/assets/acueducto.png",
-         caption="Proyecto de programa TALENTO TECH: Acueducto Samaniego - James Betancourt", use_column_width=True)
+# Se cambió use_column_width por use_container_width
+st.image("https://raw.githubusercontent.com/TU_USUARIO/TU_REPO/main/assets/imagen_acueducto.jpg",
+         caption="Proyecto Talento Tech: Acueducto Samaniego - James Betancourt R ", use_container_width=True)
+
 
 st.markdown("---")
 

@@ -3,9 +3,10 @@ import requests
 import pandas as pd
 
 # --- Configuración de ThingSpeak ---
+# **ESTAS VARIABLES DEBEN ESTAR AL INICIO DEL SCRIPT**
 CHANNEL_ID = '3071480'
-READ_API_KEY = 'IHA53391H4BEBFJ7'
-URL_THINGSPEAK = f'https://api.thingspeak.com/channels/{CHANNEL_ID}/feeds.json?api_key={READ_API_KEY}'
+READ_API_KEY = 'IHA53391H4BEBFJ7'  # ¡Pega aquí tu Read API Key!
+URL_THINGSPEAK_FEEDS = f'https://api.thingspeak.com/channels/{CHANNEL_ID}/feeds.json?api_key={READ_API_KEY}'
 
 # --- Función para obtener los datos más recientes ---
 @st.cache_data(ttl=60)
@@ -38,15 +39,14 @@ st.set_page_config(
 )
 
 st.title("💧 Sistema de Monitoreo del Acueducto")
-st.markdown("Dashboard interactivo para visualizar los datos en tiempo real y el histórico del proyecto de monitoreo del acueducto Municipio Samaniego")
+st.markdown("Dashboard interactivo para visualizar los datos en tiempo real y el histórico del proyecto de monitoreo del acueducto Samaniego.")
 
 st.markdown("---")
 
 # --- Imagen del Acueducto ---
 # Reemplaza la URL de la imagen con la que tengas en tu repositorio de GitHub
 st.image("https://raw.githubusercontent.com/jbetancourtromo/proyectoacueductoiot/main/assets/acueducto.png",
-         caption="Proyecto de Ingeniería Mecatrónica: Acueducto Ovejas-Tangua", use_column_width=True)
-
+         caption="Proyecto de programa TALENTO TECH: Acueducto Samaniego - James Betancourt", use_column_width=True)
 
 st.markdown("---")
 

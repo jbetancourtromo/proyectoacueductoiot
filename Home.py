@@ -45,9 +45,13 @@ st.markdown("Programa Talento Tech 2025 - Proyecto Acueducto IoT - James Betanco
 st.markdown("---")
 
 # --- Imagen del Acueducto ---
-# Se cambió use_column_width por use_container_width
+# --- Imagen del Acueducto ---
+# Se agrega output_format="PNG" para mantener la calidad de la imagen
 st.image("https://raw.githubusercontent.com/jbetancourtromo/proyectoacueductoiot/main/assets/acueducto.png",
-         caption="Talento Tech 2025: Proyecto Acueducto Samaniego ", use_container_width=True)
+         caption="Proyecto de Ingeniería Mecatrónica: Acueducto Ovejas-Tangua", 
+         use_container_width=True,
+         output_format="PNG")
+caption="Talento Tech 2025: Proyecto Acueducto Samaniego ", use_container_width=True)
 
 
 st.markdown("---")
@@ -70,6 +74,7 @@ if sensor_data:
 
 else:
     st.warning("No se pudieron cargar los datos de los sensores. Por favor, verifica la conexión y que el canal de ThingSpeak tenga datos.")
+
 
 
 

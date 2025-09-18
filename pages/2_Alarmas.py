@@ -31,14 +31,14 @@ st.markdown("""
     .circle-container {
         display: flex;
         justify-content: space-around;
-        align-items: flex-start; /* Alinea los elementos en la parte superior */
+        align-items: flex-start;
         flex-wrap: wrap;
         margin-top: 20px;
     }
     .circle-item {
         text-align: center;
         margin: 10px;
-        width: 120px; /* Ancho fijo para cada botón */
+        width: 120px;
     }
     .circle-button {
         width: 100px;
@@ -52,13 +52,13 @@ st.markdown("""
         align-items: center;
         text-align: center;
         transition: background-color 0.3s ease;
-        border: 2px solid #333; /* Borde para que se vean mejor */
+        border: 2px solid #333;
     }
     .circle-button.active {
-        background-color: #e74c3c; /* Rojo */
+        background-color: #e74c3c;
     }
     .circle-button.inactive {
-        background-color: #2ecc71; /* Verde */
+        background-color: #2ecc71;
     }
     .circle-text {
         font-size: 14px;
@@ -68,7 +68,6 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # --- Mapeo de bits a nombres de alarma ---
-# Asegúrate de que este mapeo coincida con tu código de Wokwi
 alarm_map = {
     1: "Caudal",
     2: "Cloro",

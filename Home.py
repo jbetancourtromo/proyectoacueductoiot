@@ -1,4 +1,4 @@
-# Desarollado Por James Betancourt 
+# Desarollado Por James Betancourt R
 # Septiembre 2025
 import streamlit as st
 import requests
@@ -41,13 +41,13 @@ st.set_page_config(
 
 st.title("💧 Sistema de Monitoreo del Acueducto")
 st.markdown("Dashboard interactivo para visualizar los datos en tiempo real y el histórico del proyecto de monitoreo del acueducto Samaniego.")
-st.markdown("Programa Talento Tech 2025 - Proyecto Acueducto IoT ")
+st.markdown("Programa Talento Tech 2025 - Proyecto Acueducto IoT - James Betancourt R - Christian Gaucales")
 st.markdown("---")
 
 # --- Imagen del Acueducto ---
 # Se cambió use_column_width por use_container_width
 st.image("https://raw.githubusercontent.com/jbetancourtromo/proyectoacueductoiot/main/assets/acueducto.png",
-         caption="Talento Tech 2025: Proyecto Acueducto Samaniego - James Betancourt R - Christian Gaucales ", use_container_width=True)
+         caption="Talento Tech 2025: Proyecto Acueducto Samaniego ", use_container_width=True)
 
 
 st.markdown("---")
@@ -70,6 +70,7 @@ if sensor_data:
 
 else:
     st.warning("No se pudieron cargar los datos de los sensores. Por favor, verifica la conexión y que el canal de ThingSpeak tenga datos.")
+
 
 
 

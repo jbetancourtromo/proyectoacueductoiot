@@ -39,7 +39,7 @@ st.set_page_config(
     layout="wide"
 )
 
-st.title("💧 Sistema de Monitoreo del Acueducto")
+st.title("💧 Sistema de Monitoreo del Acueducto - Samaniego")
 st.markdown("Dashboard interactivo para visualizar los datos en tiempo real y el histórico del proyecto de monitoreo del acueducto Samaniego.")
 
 st.markdown("---")
@@ -70,5 +70,6 @@ if sensor_data:
 
 else:
     st.warning("No se pudieron cargar los datos de los sensores. Por favor, verifica la conexión y que el canal de ThingSpeak tenga datos.")
+
 
 

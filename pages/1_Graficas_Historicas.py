@@ -8,6 +8,8 @@ CHANNEL_ID = '3071480'
 READ_API_KEY = 'IHA53391H4BEBFJ7' # ¡Pega aquí tu Read API Key!
 URL_THINGSPEAK_FEEDS = f'https://api.thingspeak.com/channels/{CHANNEL_ID}/feeds.json?api_key={READ_API_KEY}&results=2000' # Obtiene hasta 2000 puntos
 
+st.title("💧 Sistema de Monitoreo del Acueducto - Samaniego")
+
 # --- Función para obtener los datos históricos ---
 @st.cache_data(ttl=3600) # Cacha los datos por 1 hora
 def get_historical_data():
@@ -55,4 +57,5 @@ if not df_historico.empty:
     else:
         st.info("Por favor, selecciona al menos un sensor para visualizar los datos históricos.")
 else:
+
     st.warning("No se pudieron cargar datos históricos. Inténtalo de nuevo más tarde.")

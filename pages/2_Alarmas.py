@@ -19,7 +19,6 @@ def get_alarm_status():
         response = requests.get(URL_THINGSPEAK_LATEST)
         response.raise_for_status()
         data = response.json()
-        # Asegúrate de que el valor sea numérico antes de convertirlo a entero
         alarm_value = data.get('field8', '0')
         return int(float(alarm_value))
     except Exception as e:
@@ -27,15 +26,19 @@ def get_alarm_status():
     return -1
 
 # --- Estilos CSS para los botones circulares ---
-# Estos estilos se inyectan en la página
 st.markdown("""
     <style>
     .circle-container {
         display: flex;
         justify-content: space-around;
-        align-items: center;
+        align-items: flex-start; /* Alinea los elementos en la parte superior */
         flex-wrap: wrap;
         margin-top: 20px;
+    }
+    .circle-item {
+        text-align: center;
+        margin: 10px;
+        width: 120px; /* Ancho fijo para cada botón */
     }
     .circle-button {
         width: 100px;
@@ -49,12 +52,13 @@ st.markdown("""
         align-items: center;
         text-align: center;
         transition: background-color 0.3s ease;
+        border: 2px solid #333; /* Borde para que se vean mejor */
     }
     .circle-button.active {
-        background-color: #e74c3c; /* Rojo para alarma activa */
+        background-color: #e74c3c; /* Rojo */
     }
     .circle-button.inactive {
-        background-color: #2ecc71; /* Verde para alarma inactiva */
+        background-color: #2ecc71; /* Verde */
     }
     .circle-text {
         font-size: 14px;
@@ -64,6 +68,7 @@ st.markdown("""
     """, unsafe_allow_html=True)
 
 # --- Mapeo de bits a nombres de alarma ---
+# Asegúrate de que este mapeo coincida con tu código de Wokwi
 alarm_map = {
     1: "Caudal",
     2: "Cloro",
@@ -82,25 +87,23 @@ alarm_value = get_alarm_status()
 if alarm_value != -1:
     st.subheader("Indicadores de Alarma")
     
-    # Renderiza los botones usando HTML/CSS
-    html_content = '<div class="circle-container">'
-    
+    # Renderiza todos los botones en un solo bloque HTML
+    html_buttons = ''
     for bit, name in alarm_map.items():
         is_active = (alarm_value & bit) > 0
         status_class = "active" if is_active else "inactive"
         status_text = "Activa" if is_active else "Inactiva"
         
-        html_content += f"""
-        <div style="text-align:center; margin:10px;">
+        html_buttons += f"""
+        <div class="circle-item">
             <div class="circle-button {status_class}">
                 <span class="circle-text">{name}</span>
             </div>
             <p style='margin-top:5px; font-weight:bold;'>{status_text}</p>
         </div>
         """
-    html_content += '</div>'
     
-    st.markdown(html_content, unsafe_allow_html=True)
+    st.markdown(f'<div class="circle-container">{html_buttons}</div>', unsafe_allow_html=True)
 
 else:
     st.warning("No se pudo obtener el estado de las alarmas.")
@@ -108,6 +111,6 @@ else:
 st.markdown("---")
 
 if alarm_value > 0:
-    st.error("🚨 ¡ATENCIÓN! Se ha detectado una alarma. Los indicadores rojos señalan el problema.")
+    st.error("🚨 ¡ATENCIÓN! Se ha detectado una o más alarmas. Los indicadores rojos señalan los problemas.")
 else:
     st.success("✅ Sistema en estado normal. No se han detectado alarmas.")

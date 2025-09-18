@@ -8,6 +8,9 @@ CHANNEL_ID = '3071480'
 READ_API_KEY = 'IHA53391H4BEBFJ7' # ¡Pega aquí tu Read API Key!
 URL_THINGSPEAK_LATEST = f'https://api.thingspeak.com/channels/{CHANNEL_ID}/feeds/last.json?api_key={READ_API_KEY}'
 
+st.title("💧 Sistema de Monitoreo del Acueducto - Samaniego")
+st.markdown("Programa Talento Tech 2025 - Proyecto Acueducto IoT -James Betancourt R -Christian Gaucales ")
+
 # --- Función para obtener los últimos datos ---
 @st.cache_data(ttl=60)
 def get_latest_data_gauges():
@@ -68,4 +71,5 @@ if sensor_data:
         ))
         st.plotly_chart(fig_hum, use_container_width=True)
 else:
+
     st.warning("No se pudieron cargar los datos de temperatura y humedad.")

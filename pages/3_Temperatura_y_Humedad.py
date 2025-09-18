@@ -28,7 +28,7 @@ def get_latest_data_gauges():
 
 # --- Diseño de la página ---
 st.title("🌡️ Temperatura y Humedad")
-st.markdown("Visualización de las últimas lecturas de temperatura y humedad en medidores tipo 'gauge'.")
+st.markdown("Visualización de las últimas lecturas de temperatura y humedad .")
 st.markdown("---")
 
 sensor_data = get_latest_data_gauges()
@@ -73,3 +73,4 @@ if sensor_data:
 else:
 
     st.warning("No se pudieron cargar los datos de temperatura y humedad.")
+

@@ -111,5 +111,3 @@ if alarm_value > 0:
     st.error("🚨 ¡ATENCIÓN! Se ha detectado una alarma. Los indicadores rojos señalan el problema.")
 else:
     st.success("✅ Sistema en estado normal. No se han detectado alarmas.")
-      
-

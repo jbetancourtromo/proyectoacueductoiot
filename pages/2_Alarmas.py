@@ -8,7 +8,7 @@ CHANNEL_ID = '3071480'
 READ_API_KEY = 'IHA53391H4BEBFJ7' # ¡Pega aquí tu Read API Key!
 URL_THINGSPEAK_LATEST = f'https://api.thingspeak.com/channels/{CHANNEL_ID}/feeds/last.json?api_key={READ_API_KEY}'
 
-st.title("💧 Sistema de Monitoreo del Acueducto - Samaniego")
+st.title("💧 Sistema de monitoreo acueducto - Samaniego")
 st.markdown("Programa Talento Tech 2025 - Proyecto Acueducto IoT -James Betancourt R -Christian Gaucales ")
 
 # --- Función para obtener el estado de alarma ---
@@ -93,5 +93,6 @@ if alarm_value > 0:
     st.warning("Verifica los sensores con el indicador rojo para más detalles.")
 else:
     st.success("✅ Sistema en estado normal. No se han detectado alarmas.")
+
 
 

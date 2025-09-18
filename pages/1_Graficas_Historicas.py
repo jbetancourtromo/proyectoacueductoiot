@@ -8,8 +8,8 @@ CHANNEL_ID = '3071480'
 READ_API_KEY = 'IHA53391H4BEBFJ7' # ¡Pega aquí tu Read API Key!
 URL_THINGSPEAK_FEEDS = f'https://api.thingspeak.com/channels/{CHANNEL_ID}/feeds.json?api_key={READ_API_KEY}&results=2000' # Obtiene hasta 2000 puntos
 
-st.title("💧 Sistema de Monitoreo del Acueducto - Samaniego")
-st.markdown("Programa Talento Tech 2025 - Proyecto Acueducto IoT -James Betancourt R -Christian Gaucales ")
+st.title("💧 Sistema de monitoreo acueducto - Samaniego")
+st.markdown("Programa Talento Tech 2025 - Proyecto: Acueducto IoT -James Betancourt R -Christian Gaucales ")
 
 # --- Función para obtener los datos históricos ---
 @st.cache_data(ttl=3600) # Cacha los datos por 1 hora
@@ -60,6 +60,7 @@ if not df_historico.empty:
 else:
 
     st.warning("No se pudieron cargar datos históricos. Inténtalo de nuevo más tarde.")
+
 
 
 

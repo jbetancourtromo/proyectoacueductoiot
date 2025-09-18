@@ -1,4 +1,5 @@
-
+# Desarollado Por James Betancourt 
+# Septiembre 2025
 import streamlit as st
 import requests
 import pandas as pd
@@ -46,7 +47,7 @@ st.markdown("---")
 # --- Imagen del Acueducto ---
 # Se cambió use_column_width por use_container_width
 st.image("https://raw.githubusercontent.com/jbetancourtromo/proyectoacueductoiot/main/assets/acueducto.png",
-         caption="Proyecto Talento Tech: Acueducto Samaniego - James Betancourt R ", use_container_width=True)
+         caption="Proyecto Talento Tech: Acueducto Samaniego - James Betancourt R - Christian Gaucales ", use_container_width=True)
 
 
 st.markdown("---")
@@ -69,4 +70,5 @@ if sensor_data:
 
 else:
     st.warning("No se pudieron cargar los datos de los sensores. Por favor, verifica la conexión y que el canal de ThingSpeak tenga datos.")
+
 

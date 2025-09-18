@@ -19,97 +19,77 @@ def get_alarm_status():
         response = requests.get(URL_THINGSPEAK_LATEST)
         response.raise_for_status()
         data = response.json()
-        alarm_value = data.get('field8', '0')
-        return int(float(alarm_value))
+        return int(float(data.get('field8', 0)))
     except Exception as e:
         st.error(f"Error al obtener estado de alarmas: {e}")
     return -1
-
-# --- Estilos CSS para los botones circulares ---
-st.markdown("""
-    <style>
-    .circle-container {
-        display: flex;
-        justify-content: space-around;
-        align-items: flex-start;
-        flex-wrap: wrap;
-        margin-top: 20px;
-    }
-    .circle-item {
-        text-align: center;
-        margin: 10px;
-        width: 120px;
-    }
-    .circle-button {
-        width: 100px;
-        height: 100px;
-        border-radius: 50%;
-        color: white;
-        font-weight: bold;
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-items: center;
-        text-align: center;
-        transition: background-color 0.3s ease;
-        border: 2px solid #333;
-    }
-    .circle-button.active {
-        background-color: #e74c3c;
-    }
-    .circle-button.inactive {
-        background-color: #2ecc71;
-    }
-    .circle-text {
-        font-size: 14px;
-        line-height: 1.2;
-    }
-    </style>
-    """, unsafe_allow_html=True)
-
-# --- Mapeo de bits a nombres de alarma ---
-alarm_map = {
-    1: "Caudal",
-    2: "Cloro",
-    4: "Nivel",
-    8: "Presión",
-    16: "Temperatura"
-}
 
 # --- Diseño de la página ---
 st.title("🔔 Estado de Alarmas")
 st.markdown("Verifica el estado actual del sistema de alarmas con indicadores visuales.")
 st.markdown("---")
 
+# --- Lógica de alarmas y botones circulares ---
 alarm_value = get_alarm_status()
 
+# Diccionario para mapear bits a nombres de alarma
+alarm_map = {
+    1: "Caudal",
+    2: "Cloro",
+    4: "Nivel",
+    8: "Altura",
+    16: "Presión"
+}
+
+st.subheader("Indicadores de Alarma")
+
 if alarm_value != -1:
-    st.subheader("Indicadores de Alarma")
-    
-    # Renderiza todos los botones en un solo bloque HTML
-    html_buttons = ''
-    for bit, name in alarm_map.items():
+    cols = st.columns(len(alarm_map))
+
+    for i, (bit, name) in enumerate(alarm_map.items()):
         is_active = (alarm_value & bit) > 0
-        status_class = "active" if is_active else "inactive"
+        color = "red" if is_active else "green"
         status_text = "Activa" if is_active else "Inactiva"
         
-        html_buttons += f"""
-        <div class="circle-item">
-            <div class="circle-button {status_class}">
-                <span class="circle-text">{name}</span>
-            </div>
-            <p style='margin-top:5px; font-weight:bold;'>{status_text}</p>
-        </div>
-        """
-    
-    st.markdown(f'<div class="circle-container">{html_buttons}</div>', unsafe_allow_html=True)
-
+        with cols[i]:
+            # CSS para el botón circular
+            st.markdown(
+                f"""
+                <style>
+                .circle-button {{
+                    width: 80px;
+                    height: 80px;
+                    border-radius: 50%;
+                    background-color: {color};
+                    border: 2px solid #333;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    text-align: center;
+                    margin: auto;
+                }}
+                </style>
+                """,
+                unsafe_allow_html=True
+            )
+            
+            # HTML para el botón y el texto
+            st.markdown(
+                f"""
+                <div class="circle-button">
+                    <p style="color:white; font-weight:bold; font-size:12px; line-height:1.2;">{name}</p>
+                </div>
+                """,
+                unsafe_allow_html=True
+            )
+            st.markdown(f"<p style='text-align:center; font-weight:bold; font-size:14px; margin-top:10px;'>{status_text}</p>", unsafe_allow_html=True)
 else:
     st.warning("No se pudo obtener el estado de las alarmas.")
 
 st.markdown("---")
 
 if alarm_value > 0:
-    st.error("🚨 ¡ATENCIÓN! Se ha detectado una o más alarmas. Los indicadores rojos señalan los problemas.")
+    st.error("🚨 ¡ATENCIÓN! Alarma activada. Posibles problemas detectados.")
+    st.warning("Verifica los sensores con el indicador rojo para más detalles.")
 else:
     st.success("✅ Sistema en estado normal. No se han detectado alarmas.")
